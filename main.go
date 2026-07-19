@@ -11,5 +11,7 @@ func main() {
 		Handler: serveMux,
 		Addr:    ":8080",
 	}
+	serveMux.Handle("/",http.FileServer(http.Dir(".")))
+
 	log.Fatal(server.ListenAndServe())
 }
