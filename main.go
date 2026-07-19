@@ -18,9 +18,9 @@ func main() {
 		Addr:    ":8080",
 	}
 	serveMux.Handle("/app/", cfg.middlewareMetricsInc(http.StripPrefix("/app/", http.FileServer(http.Dir(".")))))
-	serveMux.HandleFunc("/healthz", healthzController)
-	serveMux.HandleFunc("/metrics", cfg.hitsController)
-	serveMux.HandleFunc("/reset", cfg.resetHitsController)
+	serveMux.HandleFunc("GET /healthz", healthzController)
+	serveMux.HandleFunc("GET /metrics", cfg.hitsController)
+	serveMux.HandleFunc("POST /reset", cfg.resetHitsController)
 
 	log.Fatal(server.ListenAndServe())
 }
