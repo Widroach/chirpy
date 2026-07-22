@@ -18,6 +18,9 @@ POST {{baseUrl}}/api/users
     "email": "user@example.com"
 }
 
+### Get a single chirp
+GET {{baseUrl}}/api/chirps/6cbe6e39-d1fc-457d-9e95-99b2ec106735
+
 ### Get all chirps
 GET {{baseUrl}}/api/chirps
 
@@ -26,5 +29,5 @@ POST {{baseUrl}}/api/chirps
 
 {
     "body": "Hi, I am new here!",
-    "user_id": "ba3f1aa1-b5fc-4cf5-85a6-002cd57878cd"
+    "user_id": "26f1c59d-71ed-4b64-91ea-4ac83a7b5ebf"
 }
