@@ -11,6 +11,15 @@ var (
 	cfg = apiConfig{}
 )
 
+const METRICS_PAGE = `
+<html>
+  <body>
+    <h1>Welcome, Chirpy Admin</h1>
+    <p>Chirpy has been visited %d times!</p>
+  </body>
+</html>
+`
+
 func main() {
 	serveMux := http.NewServeMux()
 	server := &http.Server{
@@ -19,8 +28,8 @@ func main() {
 	}
 	serveMux.Handle("/app/", cfg.middlewareMetricsInc(http.StripPrefix("/app/", http.FileServer(http.Dir(".")))))
 	serveMux.HandleFunc("GET /api/healthz", healthzController)
-	serveMux.HandleFunc("GET /api/metrics", cfg.hitsController)
-	serveMux.HandleFunc("POST /api/reset", cfg.resetHitsController)
+	serveMux.HandleFunc("GET /admin/metrics", cfg.hitsController)
+	serveMux.HandleFunc("POST /admin/reset", cfg.resetHitsController)
 
 	log.Fatal(server.ListenAndServe())
 }
@@ -32,9 +41,9 @@ func healthzController(w http.ResponseWriter, r *http.Request) {
 }
 
 func (cfg *apiConfig) hitsController(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Add("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	text := fmt.Sprintf("Hits: %v", cfg.fileserverHits.Load())
+	text := fmt.Sprintf(METRICS_PAGE, cfg.fileserverHits.Load())
 	w.Write([]byte(text))
 }
 
