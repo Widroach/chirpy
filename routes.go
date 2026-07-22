@@ -15,5 +15,7 @@ func RegisterRoutes(mux *http.ServeMux, cfg *config.ApiConfig) {
 
 	mux.HandleFunc("GET /api/healthz", controller.HealthzController)
 	mux.HandleFunc("POST /api/users", controller.CreateNewUser(cfg))
+
+	mux.HandleFunc("GET /api/chirps", controller.GetAllChirps(cfg))
 	mux.HandleFunc("POST /api/chirps", controller.CreateNewChirp(cfg))
 }

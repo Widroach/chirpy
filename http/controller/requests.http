@@ -18,6 +18,9 @@ POST {{baseUrl}}/api/users
     "email": "user@example.com"
 }
 
+### Get all chirps
+GET {{baseUrl}}/api/chirps
+
 ### Create new chirp
 POST {{baseUrl}}/api/chirps
 
