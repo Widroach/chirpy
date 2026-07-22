@@ -13,17 +13,17 @@ var (
 	BAD_WORDS = []string{"kerfuffle", "sharbert", "fornax"}
 )
 
-func ValidateController(w http.ResponseWriter, r *http.Request) {
-	type RequestMessage struct {
-		Body string `json:"body"`
-	}
-	type CleanedMessage struct {
-		CleanedBody string `json:"cleaned_body"`
-	}
-	type ResponseError struct {
-		Error string `json:"error"`
-	}
+type RequestMessage struct {
+	Body string `json:"body"`
+}
+type CleanedMessage struct {
+	CleanedBody string `json:"cleaned_body"`
+}
+type ResponseError struct {
+	Error string `json:"error"`
+}
 
+func ValidateController(w http.ResponseWriter, r *http.Request) {
 	message := RequestMessage{}
 	if err := json.NewDecoder(r.Body).Decode(&message); err != nil {
 		log.Printf("error decoding the body %v", err)
