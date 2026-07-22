@@ -11,46 +11,6 @@ POST {{baseUrl}}/admin/reset
 
 }
 
-### POST /api/validate_chirp
-
-### Success
-POST {{baseUrl}}/api/validate_chirp
-
-{
-    "body": "This message is OK"
-}
-
-### Filter
-POST {{baseUrl}}/api/validate_chirp
-
-{
-    "body": "kerfuffle is a sharbert and fornax but not fornax! or Fornax!"
-}
-
-### Error
-POST {{baseUrl}}/api/validate_chirp
-
-{
-    "body": "This message is longer than 140 characters, therefore it is NOT VALID------------------------------------------------------------------------"
-}
-
-### Empty message
-POST {{baseUrl}}/api/validate_chirp
-
-{
-    "body": ""
-}
-
-### Empty body
-POST {{baseUrl}}/api/validate_chirp
-
-{
-    
-}
-
-### Null body
-POST {{baseUrl}}/api/validate_chirp
-
 ### Create a new user
 POST {{baseUrl}}/api/users
 
@@ -58,4 +18,10 @@ POST {{baseUrl}}/api/users
     "email": "user@example.com"
 }
 
+### Create new chirp
+POST {{baseUrl}}/api/chirps
 
+{
+    "body": "Hi, I am new here!",
+    "user_id": "ba3f1aa1-b5fc-4cf5-85a6-002cd57878cd"
+}

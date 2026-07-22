@@ -25,6 +25,11 @@ func ResetController(cfg *config.ApiConfig) http.HandlerFunc {
 			RespondWithJson(w, 500, struct{ Error string }{Error: "Failed to delete the users"})
 			return
 		}
+		if err := cfg.Db.DeleteAllChirps(r.Context()); err != nil {
+			log.Printf("error deleting chirps %v", err)
+			RespondWithJson(w, 500, struct{ Error string }{Error: "Failed to delete chirps"})
+			return
+		}
 		cfg.FileserverHits.Store(0)
 
 		w.Header().Add("Content-Type", "text/plain; charset=utf-8")
