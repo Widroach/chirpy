@@ -1,0 +1,47 @@
+### GET /api/healthz
+GET {{baseUrl}}/api/healthz
+
+### GET /admin/metrics
+GET {{baseUrl}}/admin/metrics
+
+### POST /admin/reset
+POST {{baseUrl}}/admin/reset
+
+{
+
+}
+
+### POST /api/validate_chirp
+
+### Success
+POST {{baseUrl}}/api/validate_chirp
+
+{
+    "body": "This message is OK"
+}
+
+### Error
+POST {{baseUrl}}/api/validate_chirp
+
+{
+    "body": "This message is longer than 140 characters, therefore it is NOT VALID------------------------------------------------------------------------"
+}
+
+### Empty message
+POST {{baseUrl}}/api/validate_chirp
+
+{
+    "body": ""
+}
+
+### Empty body
+POST {{baseUrl}}/api/validate_chirp
+
+{
+    
+}
+
+### Null body
+POST {{baseUrl}}/api/validate_chirp
+
+
