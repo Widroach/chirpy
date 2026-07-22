@@ -20,6 +20,13 @@ POST {{baseUrl}}/api/validate_chirp
     "body": "This message is OK"
 }
 
+### Filter
+POST {{baseUrl}}/api/validate_chirp
+
+{
+    "body": "kerfuffle is a sharbert and fornax but not fornax! or Fornax!"
+}
+
 ### Error
 POST {{baseUrl}}/api/validate_chirp
 

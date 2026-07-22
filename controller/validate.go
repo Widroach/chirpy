@@ -4,18 +4,21 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"slices"
+	"strings"
 )
 
-const (
+var (
 	MAX_CHIRP = 140
+	BAD_WORDS = []string{"kerfuffle", "sharbert", "fornax"}
 )
 
 func ValidateController(w http.ResponseWriter, r *http.Request) {
 	type RequestMessage struct {
 		Body string `json:"body"`
 	}
-	type ResponseSuccess struct {
-		Valid bool `json:"valid"`
+	type CleanedMessage struct {
+		CleanedBody string `json:"cleaned_body"`
 	}
 	type ResponseError struct {
 		Error string `json:"error"`
@@ -34,5 +37,23 @@ func ValidateController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RespondWithJson(w, 200, ResponseSuccess{Valid: true})
+	filteredBody := filterMessage(message.Body)
+	RespondWithJson(w, 200, CleanedMessage{CleanedBody: filteredBody})
+}
+
+func filterMessage(message string) string {
+	words := strings.Split(message, " ")
+	filtered := []string{}
+
+	for _, word := range words {
+		wordLowerCase := strings.ToLower(word)
+		lastChar := string(word[len(word)-1])
+		if isBad := slices.Contains(BAD_WORDS, wordLowerCase); isBad && lastChar != "!" {
+			filtered = append(filtered, strings.Repeat("*", 4))
+		} else {
+			filtered = append(filtered, word)
+		}
+	}
+
+	return strings.Join(filtered, " ")
 }
