@@ -51,4 +51,11 @@ POST {{baseUrl}}/api/validate_chirp
 ### Null body
 POST {{baseUrl}}/api/validate_chirp
 
+### Create a new user
+POST {{baseUrl}}/api/users
+
+{
+    "email": "user@example.com"
+}
+
 

@@ -10,7 +10,8 @@ import (
 
 type ApiConfig struct {
 	FileserverHits atomic.Int32
-	db             *database.Queries
+	Db             *database.Queries
+	Platform       string
 }
 
 const METRICS_PAGE = `
@@ -29,13 +30,6 @@ func (cfg *ApiConfig) HitsController(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(text))
 }
 
-func (cfg *ApiConfig) ResetHitsController(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "text/plain; charset=utf-8")
-	cfg.FileserverHits.Store(0)
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Success"))
-}
-
 func (cfg *ApiConfig) MiddlewareMetricsInc(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cfg.FileserverHits.Add(1)
@@ -43,6 +37,6 @@ func (cfg *ApiConfig) MiddlewareMetricsInc(next http.Handler) http.Handler {
 	})
 }
 
-func (cfg *ApiConfig) RegisterDatabase(dbQueries database.Queries) {
-	cfg.db = &dbQueries
+func (cfg *ApiConfig) RegisterDatabase(dbQueries *database.Queries) {
+	cfg.Db = dbQueries
 }
