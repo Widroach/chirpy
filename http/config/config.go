@@ -1,10 +1,17 @@
-package controller
+package config
 
 import (
 	"fmt"
 	"net/http"
 	"sync/atomic"
+
+	"github.com/widroach/chirpy/internal/database"
 )
+
+type ApiConfig struct {
+	FileserverHits atomic.Int32
+	db             *database.Queries
+}
 
 const METRICS_PAGE = `
 <html>
@@ -15,27 +22,27 @@ const METRICS_PAGE = `
 </html>
 `
 
-type ApiConfig struct {
-	fileserverHits atomic.Int32
-}
-
 func (cfg *ApiConfig) HitsController(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	text := fmt.Sprintf(METRICS_PAGE, cfg.fileserverHits.Load())
+	text := fmt.Sprintf(METRICS_PAGE, cfg.FileserverHits.Load())
 	w.Write([]byte(text))
 }
 
 func (cfg *ApiConfig) ResetHitsController(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/plain; charset=utf-8")
-	cfg.fileserverHits.Store(0)
+	cfg.FileserverHits.Store(0)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Success"))
 }
 
 func (cfg *ApiConfig) MiddlewareMetricsInc(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cfg.fileserverHits.Add(1)
+		cfg.FileserverHits.Add(1)
 		next.ServeHTTP(w, r)
 	})
+}
+
+func (cfg *ApiConfig) RegisterDatabase(dbQueries database.Queries) {
+	cfg.db = &dbQueries
 }
