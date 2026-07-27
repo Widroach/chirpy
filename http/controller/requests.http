@@ -15,7 +15,17 @@ POST {{baseUrl}}/admin/reset
 POST {{baseUrl}}/api/users
 
 {
-    "email": "user@example.com"
+    "email": "user@example.com",
+    "password": "123456789"
+}
+
+### Login
+
+POST {{baseUrl}}/api/login
+
+{
+    "email": "user@example.com",
+    "password": "123456789"
 }
 
 ### Get a single chirp

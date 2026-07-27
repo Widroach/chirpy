@@ -19,4 +19,5 @@ func RegisterRoutes(mux *http.ServeMux, cfg *config.ApiConfig) {
 	mux.HandleFunc("GET /api/chirps", controller.GetAllChirps(cfg))
 	mux.HandleFunc("GET /api/chirps/{chirpId}", controller.GetChirp(cfg))
 	mux.HandleFunc("POST /api/chirps", controller.CreateNewChirp(cfg))
+	mux.HandleFunc("POST /api/login", controller.LoginController(cfg))
 }

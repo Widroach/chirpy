@@ -6,32 +6,38 @@ import (
 	"net/http"
 
 	"github.com/widroach/chirpy/http/config"
+	"github.com/widroach/chirpy/internal/auth"
+	"github.com/widroach/chirpy/internal/database"
 )
 
 type postRequest struct {
-	Email string `json:"email"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func CreateNewUser(cfg *config.ApiConfig) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		request := postRequest{}
 		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-			RespondWithJson(w, 400, struct{ Error string }{Error: "Request should contain email field"})
+			log.Printf("error decoding request %v", err)
+			RespondWithJson(w, 400, struct{ Error string }{Error: "Request is invalid, it should contain email and password field"})
 			return
 		}
-		user, err := cfg.Db.CreateUser(r.Context(), request.Email)
+
+		hashedPassword, err := auth.HashPassword(request.Password)
+		if err != nil {
+			log.Printf("error creating new user %v", err)
+			RespondWithJson(w, 500, struct{ Error string }{Error: "Failed to create the user"})
+			return
+		}
+
+		user, err := cfg.Db.CreateUser(r.Context(), database.CreateUserParams{Email: request.Email, HashedPassword: hashedPassword})
 		if err != nil {
 			log.Printf("error creating new user %v", err)
 			RespondWithJson(w, 500, struct{ Error string }{Error: "Something went wrong while creating new user"})
 			return
 		}
-		userJson, err := json.Marshal(user)
-		if err != nil {
-			RespondWithJson(w, 500, struct{ Error string }{Error: "Something went wrong"})
-			return
-		}
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(201)
-		w.Write(userJson)
+	
+		RespondWithJson(w, 201, user)
 	}
 }

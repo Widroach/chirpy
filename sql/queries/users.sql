@@ -4,14 +4,30 @@ INSERT INTO
         id,
         created_at,
         updated_at,
-        email
+        email,
+        hashed_password
     )
 VALUES (
         gen_random_uuid (),
         NOW(),
         NOW(),
-        $1
-    ) RETURNING *;
+        $1,
+        $2
+    ) RETURNING id,
+    created_at,
+    updated_at,
+    email;
+
+-- name: GetUser :one
+SELECT
+    id,
+    created_at,
+    updated_at,
+    email,
+    hashed_password
+FROM users
+WHERE
+    email = $1;
 
 -- name: DeleteAllUsers :exec
 DELETE FROM users;
