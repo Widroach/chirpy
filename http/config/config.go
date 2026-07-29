@@ -33,7 +33,9 @@ func (cfg *ApiConfig) HitsController(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	text := fmt.Sprintf(METRICS_PAGE, cfg.FileserverHits.Load())
-	w.Write([]byte(text))
+	if _, err := w.Write([]byte(text)); err != nil {
+		log.Printf("error failed to respond to client: %v", err)
+	}
 }
 
 func (cfg *ApiConfig) MiddlewareMetricsInc(next http.Handler) http.Handler {

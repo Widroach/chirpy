@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -12,7 +13,9 @@ type ErrorResponse struct {
 func RespondWithError(w http.ResponseWriter, statusCode int, message string) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(statusCode)
-	w.Write([]byte(message))
+	if _, err := w.Write([]byte(message)); err != nil {
+		log.Printf("error failed to respond to client: %v", err)
+	}
 }
 
 func RespondWithJson(w http.ResponseWriter, statusCode int, payload any) {
@@ -24,5 +27,7 @@ func RespondWithJson(w http.ResponseWriter, statusCode int, payload any) {
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	w.Write(payloadJson)
+	if _, err := w.Write(payloadJson); err != nil {
+		log.Printf("error failed to respond to client: %v", err)
+	}
 }

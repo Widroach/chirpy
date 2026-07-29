@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"sync/atomic"
+	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -43,8 +44,9 @@ func main() {
 
 	serveMux := http.NewServeMux()
 	server := &http.Server{
-		Handler: serveMux,
-		Addr:    ":8080",
+		Handler:           serveMux,
+		Addr:              ":8080",
+		ReadHeaderTimeout: 2 * time.Second,
 	}
 
 	RegisterRoutes(serveMux, &cfg)
