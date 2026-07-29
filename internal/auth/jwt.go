@@ -1,6 +1,9 @@
 package auth
 
 import (
+	"errors"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -40,4 +43,14 @@ func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
 		return uuid.New(), err
 	}
 	return userId, nil
+}
+
+func GetBearerToken(headers http.Header) (string, error) {
+	authHeader := headers.Get("Authorization")
+	token := strings.TrimPrefix(authHeader, "Bearer")
+	token = strings.TrimSpace(token)
+	if token == "" {
+		return "", errors.New("error no \"Authorization header is missing or invalid\"")
+	}
+	return token, nil
 }

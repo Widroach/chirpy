@@ -29,5 +29,8 @@ FROM users
 WHERE
     email = $1;
 
+-- name: GetUserById :one
+SELECT id FROM users WHERE id = $1;
+
 -- name: DeleteAllUsers :exec
 DELETE FROM users;

@@ -25,7 +25,8 @@ POST {{baseUrl}}/api/login
 
 {
     "email": "user@example.com",
-    "password": "123456789"
+    "password": "123456789",
+    "expires_in_seconds": 3600
 }
 
 ### Get a single chirp
@@ -36,8 +37,9 @@ GET {{baseUrl}}/api/chirps
 
 ### Create new chirp
 POST {{baseUrl}}/api/chirps
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiYTI3NGY2ZjktNzYzZC00MThhLThlZDAtZjFjNmZiMzUzNzgxIiwiZXhwIjoxNzg1Mjg3MzI3LCJpYXQiOjE3ODUyODM3Mjd9.UpRBvwJ_JQOKgSZgmhq4ylfrkrKaCN2fJsIPKdXyFLc
 
 {
     "body": "Hi, I am new here!",
-    "user_id": "26f1c59d-71ed-4b64-91ea-4ac83a7b5ebf"
+    "user_id": "a274f6f9-763d-418a-8ed0-f1c6fb353781"
 }

@@ -1,10 +1,10 @@
-// http/controller/metrics.go
 package controller
 
 import (
 	"log"
 	"net/http"
 
+	responseWriter "github.com/widroach/chirpy/http"
 	"github.com/widroach/chirpy/http/config"
 )
 
@@ -17,24 +17,24 @@ func HitsController(cfg *config.ApiConfig) http.HandlerFunc {
 func ResetController(cfg *config.ApiConfig) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if cfg.Platform != "dev" {
-			RespondWithJson(w, 403, struct{ Error string }{Error: "Forbidden action"})
+			responseWriter.RespondWithJson(w, 403, struct{ Error string }{Error: "Forbidden action"})
 			return
 		}
 		if err := cfg.Db.DeleteAllUsers(r.Context()); err != nil {
 			log.Printf("error deleting users %v", err)
-			RespondWithJson(w, 500, struct{ Error string }{Error: "Failed to delete the users"})
+			responseWriter.RespondWithJson(w, 500, struct{ Error string }{Error: "Failed to delete the users"})
 			return
 		}
 		if err := cfg.Db.DeleteAllChirps(r.Context()); err != nil {
 			log.Printf("error deleting chirps %v", err)
-			RespondWithJson(w, 500, struct{ Error string }{Error: "Failed to delete chirps"})
+			responseWriter.RespondWithJson(w, 500, struct{ Error string }{Error: "Failed to delete chirps"})
 			return
 		}
 		cfg.FileserverHits.Store(0)
 
-		w.Header().Add("Content-Type", "text/plain; charset=utf-8")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Success"))
+		responseWriter.RespondWithJson(w, http.StatusOK, struct {
+			Success bool `json:"success"`
+		}{Success: true})
 	}
 }
 

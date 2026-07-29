@@ -22,7 +22,17 @@ var (
 )
 
 func main() {
-	godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		log.Printf("error reading .env: %v", err)
+	}
+
+	jwtSecret := os.Getenv("SECRET")
+	cfg.Secret = strings.ToLower(jwtSecret)
+
+	platform := os.Getenv("PLATFORM")
+	cfg.Platform = strings.ToLower(platform)
+
 	dbURL := os.Getenv("DB_URL")
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
@@ -30,7 +40,6 @@ func main() {
 	}
 	dbQueries := database.New(db)
 	cfg.RegisterDatabase(dbQueries)
-	cfg.Platform = strings.ToLower(os.Getenv("PLATFORM"))
 
 	serveMux := http.NewServeMux()
 	server := &http.Server{

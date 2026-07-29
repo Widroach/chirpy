@@ -1,9 +1,13 @@
 package controller
 
-import "net/http"
+import (
+	"net/http"
+
+	ResponseWriter "github.com/widroach/chirpy/http"
+)
 
 func HealthzController(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("OK"))
+	ResponseWriter.RespondWithJson(w, http.StatusOK, struct {
+		Status string `json:"status"`
+	}{Status: "OK"})
 }
