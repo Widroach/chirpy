@@ -2,4 +2,5 @@ package middleware
 
 type contextKey string
 
-const UserIDKey contextKey = "userId"
+const USER_ID_KEY contextKey = "userId"
+const REFRESH_TOKEN contextKey = "refreshToken"

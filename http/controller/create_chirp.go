@@ -39,7 +39,7 @@ func (a *API) CreateNewChirp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userId, ok := r.Context().Value(middleware.UserIDKey).(uuid.UUID)
+	userId, ok := r.Context().Value(middleware.USER_ID_KEY).(uuid.UUID)
 	if !ok {
 		responseWriter.RespondWithJson(w, 404, ResponseError{Error: "Invalid user ID"})
 		return

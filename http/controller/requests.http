@@ -20,14 +20,19 @@ POST {{baseUrl}}/api/users
 }
 
 ### Login
-
 POST {{baseUrl}}/api/login
 
 {
     "email": "user@example.com",
-    "password": "123456789",
-    "expires_in_seconds": 3600
+    "password": "123456789"
 }
+### Refresh Token
+POST {{baseUrl}}/api/refresh
+Authorization: Bearer 62434aff7a9904298e9879cf55aa6acab7c090f6d8b0fc942c1aab8b2e191e7d
+
+### Revoke Token
+POST {{baseUrl}}/api/revoke
+Authorization: Bearer 62434aff7a9904298e9879cf55aa6acab7c090f6d8b0fc942c1aab8b2e191e7d
 
 ### Get a single chirp
 GET {{baseUrl}}/api/chirps/6cbe6e39-d1fc-457d-9e95-99b2ec106735

@@ -13,15 +13,15 @@ import (
 
 type LoginRequest struct {
 	postRequest
-	ExpiresInSeconds int `json:"expires_in_seconds"`
 }
 
 type LoginResponse struct {
-	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Email     string    `json:"email"`
-	Token     string    `json:"token"`
+	ID           uuid.UUID `json:"id"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
+	Email        string    `json:"email"`
+	Token        string    `json:"token"`
+	RefreshToken string    `json:"refresh_token"`
 }
 
 func (a *API) LoginController(w http.ResponseWriter, r *http.Request) {
@@ -46,16 +46,19 @@ func (a *API) LoginController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if request.ExpiresInSeconds <= 0 || request.ExpiresInSeconds > int(time.Hour.Seconds()) {
-		request.ExpiresInSeconds = 3600
-	}
-	token, err := auth.MakeJWT(user.ID, a.secret, time.Duration(request.ExpiresInSeconds)*time.Second)
+	token, err := auth.MakeJWT(user.ID, a.secret, time.Hour)
 	if err != nil {
 		log.Printf("error making JWT: %v", err)
 		responseWriter.RespondWithJson(w, 500, struct{ Error string }{Error: "Something went wrong"})
 		return
 	}
 
-	response := LoginResponse{ID: user.ID, CreatedAt: user.CreatedAt, UpdatedAt: user.UpdatedAt, Email: user.Email, Token: token}
+	refreshToken, err := a.SaveRefreshToken(user.ID, r.Context())
+	if err != nil {
+		log.Printf("error storing the refresh token in the database: %v", err)
+		responseWriter.RespondWithJson(w, 500, struct{ Error string }{Error: "Something went wrong"})
+		return
+	}
+	response := LoginResponse{ID: user.ID, CreatedAt: user.CreatedAt, UpdatedAt: user.UpdatedAt, Email: user.Email, Token: token, RefreshToken: refreshToken}
 	responseWriter.RespondWithJson(w, 200, response)
 }

@@ -30,7 +30,7 @@ func (j *JWT) Authenticate(next http.Handler) http.Handler {
 			responseWriter.RespondWithJson(w, 401, struct{ Error string }{Error: "Invalid JWT in the Authorization: Bearer header"})
 			return
 		}
-		ctx := context.WithValue(r.Context(), UserIDKey, userId)
+		ctx := context.WithValue(r.Context(), USER_ID_KEY, userId)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
