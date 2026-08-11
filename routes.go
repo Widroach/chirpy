@@ -3,21 +3,21 @@ package main
 import (
 	"net/http"
 
-	"github.com/widroach/chirpy/http/config"
 	"github.com/widroach/chirpy/http/controller"
+	"github.com/widroach/chirpy/http/middleware"
 )
 
-func RegisterRoutes(mux *http.ServeMux, cfg *config.ApiConfig) {
-	mux.Handle("/app/", cfg.MiddlewareMetricsInc(http.StripPrefix("/app/", http.FileServer(http.Dir(".")))))
+func RegisterRoutes(mux *http.ServeMux, api *controller.API, jwt *middleware.JWT) {
+	mux.Handle("/app/", api.Metrics().Inc(http.StripPrefix("/app/", http.FileServer(http.Dir(".")))))
 
-	mux.HandleFunc("GET /admin/metrics", controller.HitsController(cfg))
-	mux.HandleFunc("POST /admin/reset", controller.ResetController(cfg))
+	mux.HandleFunc("GET /admin/metrics", api.HitsController)
+	mux.HandleFunc("POST /admin/reset", api.ResetController)
 
 	mux.HandleFunc("GET /api/healthz", controller.HealthzController)
-	mux.HandleFunc("POST /api/users", controller.CreateNewUser(cfg))
+	mux.HandleFunc("POST /api/users", api.CreateNewUser)
 
-	mux.HandleFunc("GET /api/chirps", controller.GetAllChirps(cfg))
-	mux.HandleFunc("GET /api/chirps/{chirpId}", controller.GetChirp(cfg))
-	mux.HandleFunc("POST /api/chirps", cfg.JWTMiddleware(controller.CreateNewChirp(cfg)))
-	mux.HandleFunc("POST /api/login", controller.LoginController(cfg))
+	mux.HandleFunc("GET /api/chirps", api.GetAllChirps)
+	mux.HandleFunc("GET /api/chirps/{chirpId}", api.GetChirp)
+	mux.Handle("POST /api/chirps", jwt.Authenticate(http.HandlerFunc(api.CreateNewChirp)))
+	mux.HandleFunc("POST /api/login", api.LoginController)
 }

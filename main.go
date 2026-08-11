@@ -6,20 +6,14 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"sync/atomic"
 	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 
-	"github.com/widroach/chirpy/http/config"
+	"github.com/widroach/chirpy/http/controller"
+	"github.com/widroach/chirpy/http/middleware"
 	"github.com/widroach/chirpy/internal/database"
-)
-
-var (
-	cfg = config.ApiConfig{
-		FileserverHits: atomic.Int32{},
-	}
 )
 
 func main() {
@@ -28,11 +22,8 @@ func main() {
 		log.Printf("error reading .env: %v", err)
 	}
 
-	jwtSecret := os.Getenv("SECRET")
-	cfg.Secret = strings.ToLower(jwtSecret)
-
-	platform := os.Getenv("PLATFORM")
-	cfg.Platform = strings.ToLower(platform)
+	secret := strings.ToLower(os.Getenv("SECRET"))
+	platform := strings.ToLower(os.Getenv("PLATFORM"))
 
 	dbURL := os.Getenv("DB_URL")
 	db, err := sql.Open("postgres", dbURL)
@@ -40,15 +31,17 @@ func main() {
 		log.Fatalf("error connecting to db %v", err)
 	}
 	dbQueries := database.New(db)
-	cfg.RegisterDatabase(dbQueries)
+
+	api := controller.NewAPI(dbQueries, secret, platform, middleware.NewMetrics())
 
 	serveMux := http.NewServeMux()
+	RegisterRoutes(serveMux, api, middleware.NewJWT(secret))
+
 	server := &http.Server{
 		Handler:           serveMux,
 		Addr:              ":8080",
 		ReadHeaderTimeout: 2 * time.Second,
 	}
 
-	RegisterRoutes(serveMux, &cfg)
 	log.Fatal(server.ListenAndServe())
 }
