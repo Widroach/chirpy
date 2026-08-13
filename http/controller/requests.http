@@ -34,6 +34,15 @@ Authorization: Bearer 62434aff7a9904298e9879cf55aa6acab7c090f6d8b0fc942c1aab8b2e
 POST {{baseUrl}}/api/revoke
 Authorization: Bearer 62434aff7a9904298e9879cf55aa6acab7c090f6d8b0fc942c1aab8b2e191e7d
 
+### Update User
+PUT {{baseUrl}}/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiMGVhODljYWMtMzViMC00ZWIzLWE1NTctZTdkYTYzYTVkMGYzIiwiZXhwIjoxNzg2NjUzODcyLCJpYXQiOjE3ODY2NTAyNzJ9.KuteSIQlAiweI_R-DAbfG1s8ADXDNkVFwOq5tyff4_o
+
+{
+    "email": "user@example.com",
+    "password": "987654321"
+}
+
 ### Get a single chirp
 GET {{baseUrl}}/api/chirps/6cbe6e39-d1fc-457d-9e95-99b2ec106735
 
