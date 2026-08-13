@@ -23,4 +23,5 @@ func RegisterRoutes(mux *http.ServeMux, api *controller.API, jwt *middleware.JWT
 	mux.Handle("POST /api/refresh", middleware.ValidateRefreshToken(http.HandlerFunc(api.RefreshToken)))
 	mux.Handle("POST /api/revoke", middleware.ValidateRefreshToken(http.HandlerFunc(api.RevokeRefreshToken)))
 	mux.Handle("PUT /api/users", jwt.Authenticate(http.HandlerFunc(api.UpdateUser)))
+	mux.Handle("DELETE /api/chirps/{chirpId}", jwt.Authenticate(http.HandlerFunc(api.DeleteChirpById)))
 }

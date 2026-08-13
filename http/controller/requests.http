@@ -51,9 +51,13 @@ GET {{baseUrl}}/api/chirps
 
 ### Create new chirp
 POST {{baseUrl}}/api/chirps
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiYTI3NGY2ZjktNzYzZC00MThhLThlZDAtZjFjNmZiMzUzNzgxIiwiZXhwIjoxNzg1Mjg3MzI3LCJpYXQiOjE3ODUyODM3Mjd9.UpRBvwJ_JQOKgSZgmhq4ylfrkrKaCN2fJsIPKdXyFLc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiNzc1ODQzMzEtMmUzNC00MmJiLTk0ZDMtN2RiZDE0ZjY4ZTU1IiwiZXhwIjoxNzg2NjU1OTA4LCJpYXQiOjE3ODY2NTIzMDh9.P_drZY8do927q_hTe-4439XXyqH9GG0MOUpA1dp6AVE
 
 {
     "body": "Hi, I am new here!",
     "user_id": "a274f6f9-763d-418a-8ed0-f1c6fb353781"
 }
+
+### Delete chirp
+DELETE {{baseUrl}}/api/chirps/98ae92f6-7297-4770-a6e2-087b6c72d28e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiNzc1ODQzMzEtMmUzNC00MmJiLTk0ZDMtN2RiZDE0ZjY4ZTU1IiwiZXhwIjoxNzg2NjU1OTA4LCJpYXQiOjE3ODY2NTIzMDh9.P_drZY8do927q_hTe-4439XXyqH9GG0MOUpA1dp6AVE

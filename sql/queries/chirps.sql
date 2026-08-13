@@ -13,13 +13,18 @@ VALUES (
         NOW(),
         $1,
         $2
-    ) RETURNING *;
+    )
+RETURNING
+    *;
 
 -- name: GetAllChirps :many
 SELECT * FROM chirps ORDER BY created_at;
 
 -- name: GetChirp :one
 SELECT * FROM chirps WHERE id = $1;
+
+-- name: DeleteChirp :one
+DELETE FROM chirps WHERE id = $1 RETURNING *;
 
 -- name: DeleteAllChirps :exec
 DELETE FROM chirps;

@@ -26,7 +26,9 @@ VALUES (
         NOW(),
         $1,
         $2
-    ) RETURNING id, created_at, updated_at, body, user_id
+    )
+RETURNING
+    id, created_at, updated_at, body, user_id
 `
 
 type CreateChirpParams struct {
@@ -54,6 +56,23 @@ DELETE FROM chirps
 func (q *Queries) DeleteAllChirps(ctx context.Context) error {
 	_, err := q.db.ExecContext(ctx, deleteAllChirps)
 	return err
+}
+
+const deleteChirp = `-- name: DeleteChirp :one
+DELETE FROM chirps WHERE id = $1 RETURNING id, created_at, updated_at, body, user_id
+`
+
+func (q *Queries) DeleteChirp(ctx context.Context, id uuid.UUID) (Chirp, error) {
+	row := q.db.QueryRowContext(ctx, deleteChirp, id)
+	var i Chirp
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Body,
+		&i.UserID,
+	)
+	return i, err
 }
 
 const getAllChirps = `-- name: GetAllChirps :many
