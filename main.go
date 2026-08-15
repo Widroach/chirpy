@@ -24,6 +24,7 @@ func main() {
 
 	secret := strings.ToLower(os.Getenv("SECRET"))
 	platform := strings.ToLower(os.Getenv("PLATFORM"))
+	polkaKey := strings.ToLower(os.Getenv("POLKA_KEY"))
 
 	dbURL := os.Getenv("DB_URL")
 	db, err := sql.Open("postgres", dbURL)
@@ -32,7 +33,7 @@ func main() {
 	}
 	dbQueries := database.New(db)
 
-	api := controller.NewAPI(dbQueries, secret, platform, middleware.NewMetrics())
+	api := controller.NewAPI(dbQueries, secret, polkaKey, platform, middleware.NewMetrics())
 
 	serveMux := http.NewServeMux()
 	RegisterRoutes(serveMux, api, middleware.NewJWT(secret))

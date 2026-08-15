@@ -8,14 +8,16 @@ import (
 type API struct {
 	db       *database.Queries
 	secret   string
+	PolkaKey string
 	platform string
 	metrics  *middleware.Metrics
 }
 
-func NewAPI(db *database.Queries, secret, platform string, metrics *middleware.Metrics) *API {
+func NewAPI(db *database.Queries, secret, polkaKey, platform string, metrics *middleware.Metrics) *API {
 	return &API{
 		db:       db,
 		secret:   secret,
+		PolkaKey: polkaKey,
 		platform: platform,
 		metrics:  metrics,
 	}

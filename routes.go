@@ -24,5 +24,5 @@ func RegisterRoutes(mux *http.ServeMux, api *controller.API, jwt *middleware.JWT
 	mux.Handle("POST /api/revoke", middleware.ValidateRefreshToken(http.HandlerFunc(api.RevokeRefreshToken)))
 	mux.Handle("PUT /api/users", jwt.Authenticate(http.HandlerFunc(api.UpdateUser)))
 	mux.Handle("DELETE /api/chirps/{chirpId}", jwt.Authenticate(http.HandlerFunc(api.DeleteChirpById)))
-	mux.HandleFunc("POST /api/polka/webhooks", api.UpgradeUserMembership)
+	mux.Handle("POST /api/polka/webhooks", middleware.VerifyPolkaApiKey(http.HandlerFunc(api.UpgradeUserMembership), api.PolkaKey))
 }
