@@ -18,7 +18,8 @@ RETURNING
     id,
     created_at,
     updated_at,
-    email;
+    email,
+    is_chirpy_red;
 
 -- name: GetUser :one
 SELECT
@@ -26,7 +27,8 @@ SELECT
     created_at,
     updated_at,
     email,
-    hashed_password
+    hashed_password,
+    is_chirpy_red
 FROM users
 WHERE
     email = $1;
@@ -46,7 +48,11 @@ RETURNING
     id,
     created_at,
     updated_at,
-    email;
+    email,
+    is_chirpy_red;
+
+-- name: UpgradeUserMembership :exec
+UPDATE users SET is_chirpy_red = TRUE WHERE id = $1;
 
 -- name: DeleteAllUsers :exec
 DELETE FROM users;

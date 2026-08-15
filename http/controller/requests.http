@@ -43,6 +43,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktY
     "password": "987654321"
 }
 
+### WEBHOOK Upgrade membership
+POST {{baseUrl}}/api/polka/webhooks
+
+{
+  "event": "user.upgraded",
+  "data": {
+    "user_id": "d203715e-bef9-467a-b5d3-7b6d378c76dd"
+  }
+}
+
 ### Get a single chirp
 GET {{baseUrl}}/api/chirps/6cbe6e39-d1fc-457d-9e95-99b2ec106735
 

@@ -22,6 +22,7 @@ type LoginResponse struct {
 	Email        string    `json:"email"`
 	Token        string    `json:"token"`
 	RefreshToken string    `json:"refresh_token"`
+	IsChirpyRed  bool      `json:"is_chirpy_red"`
 }
 
 func (a *API) LoginController(w http.ResponseWriter, r *http.Request) {
@@ -59,6 +60,6 @@ func (a *API) LoginController(w http.ResponseWriter, r *http.Request) {
 		responseWriter.RespondWithJson(w, 500, struct{ Error string }{Error: "Something went wrong"})
 		return
 	}
-	response := LoginResponse{ID: user.ID, CreatedAt: user.CreatedAt, UpdatedAt: user.UpdatedAt, Email: user.Email, Token: token, RefreshToken: refreshToken}
+	response := LoginResponse{ID: user.ID, CreatedAt: user.CreatedAt, UpdatedAt: user.UpdatedAt, Email: user.Email, Token: token, RefreshToken: refreshToken, IsChirpyRed: user.IsChirpyRed}
 	responseWriter.RespondWithJson(w, 200, response)
 }
