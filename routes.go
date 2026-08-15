@@ -16,7 +16,7 @@ func RegisterRoutes(mux *http.ServeMux, api *controller.API, jwt *middleware.JWT
 	mux.HandleFunc("GET /api/healthz", controller.HealthzController)
 	mux.HandleFunc("POST /api/users", api.CreateNewUser)
 
-	mux.HandleFunc("GET /api/chirps", api.GetAllChirps)
+	mux.HandleFunc("GET /api/chirps", api.GetChirps)
 	mux.HandleFunc("GET /api/chirps/{chirpId}", api.GetChirp)
 	mux.Handle("POST /api/chirps", jwt.Authenticate(http.HandlerFunc(api.CreateNewChirp)))
 	mux.HandleFunc("POST /api/login", api.LoginController)

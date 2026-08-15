@@ -9,16 +9,33 @@ import (
 	"github.com/widroach/chirpy/internal/database"
 )
 
-func (a *API) GetAllChirps(w http.ResponseWriter, r *http.Request) {
-	chirps, err := a.db.GetAllChirps(r.Context())
+func (a *API) GetChirps(w http.ResponseWriter, r *http.Request) {
+	authorID := r.URL.Query().Get("author_id")
+
+	var chirps []database.Chirp
+	var err error
+
+	if authorID != "" {
+		id, parseErr := uuid.Parse(authorID)
+		if parseErr != nil {
+			responseWriter.RespondWithJson(w, 400, responseWriter.ErrorResponse{Error: "Invalid author_id"})
+			return
+		}
+		chirps, err = a.db.GetChirpsByUserId(r.Context(), id)
+	} else {
+		chirps, err = a.db.GetAllChirps(r.Context())
+	}
+
+	if chirps == nil {
+		chirps = []database.Chirp{}
+	}
+
 	if err != nil {
 		log.Printf("error retrieving chirps: %v", err)
 		responseWriter.RespondWithJson(w, 500, responseWriter.ErrorResponse{Error: "Failed to retrieve chirps."})
 		return
 	}
-	if chirps == nil {
-		chirps = []database.Chirp{}
-	}
+
 	responseWriter.RespondWithJson(w, 200, chirps)
 }
 
