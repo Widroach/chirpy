@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"net/http"
+	"slices"
 
 	"github.com/google/uuid"
 	responseWriter "github.com/widroach/chirpy/http"
@@ -10,6 +11,7 @@ import (
 )
 
 func (a *API) GetChirps(w http.ResponseWriter, r *http.Request) {
+	sort := r.URL.Query().Get("sort")
 	authorID := r.URL.Query().Get("author_id")
 
 	var chirps []database.Chirp
@@ -34,6 +36,12 @@ func (a *API) GetChirps(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error retrieving chirps: %v", err)
 		responseWriter.RespondWithJson(w, 500, responseWriter.ErrorResponse{Error: "Failed to retrieve chirps."})
 		return
+	}
+
+	if sort == "desc" {
+		slices.SortFunc(chirps, func(a, b database.Chirp) int {
+			return b.CreatedAt.Compare(a.CreatedAt)
+		})
 	}
 
 	responseWriter.RespondWithJson(w, 200, chirps)
